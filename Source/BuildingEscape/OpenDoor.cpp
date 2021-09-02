@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "GameFramework/PlayerController.h"
 
+#define OUT_PARAMETER
+
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
 {
@@ -29,6 +31,11 @@ void UOpenDoor::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Actor %s has OpenDoor component but no PressurePlate"), *GetOwner()->GetName());
 	}
+
+	if (Slab)
+	{
+		SlabInitialPitch = Slab->GetActorLocation().Z;
+	}
 }
 
 
@@ -38,7 +45,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	//ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 	//UE_LOG(LogTemp, Warning, TEXT("Yaw: %f"), GetOwner()->GetActorRotation().Yaw);
-	if (PressurePlate && PressurePlate->IsOverlappingActor(ActorThatOpens))
+	if (TotalMassOfActors() > MassRequiredToOpen)
 	{
 		OpenDoor(DeltaTime);
 		DoorLastOpened = GetWorld()->GetTimeSeconds();
@@ -58,6 +65,11 @@ void UOpenDoor::OpenDoor(float DeltaTime)
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(DoorRotation);
+
+	if (Slab)
+	{
+		PressSlab(DeltaTime);
+	}
 }
 
 void UOpenDoor::CloseDoor(float DeltaTime)
@@ -66,5 +78,38 @@ void UOpenDoor::CloseDoor(float DeltaTime)
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(DoorRotation);
+
+	if (Slab)
+	{
+		UnpressSlab(DeltaTime);
+	}
 }
 
+float UOpenDoor::TotalMassOfActors() const
+{
+	float TotalMass = 0.f;
+	TArray<AActor*> OverlappingActors;
+	PressurePlate->GetOverlappingActors(OUT_PARAMETER OverlappingActors);
+
+	for (int32 i = 0; i < OverlappingActors.Num(); i++)
+	{
+		TotalMass += OverlappingActors[i]->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+	}
+	return TotalMass;
+}
+
+void UOpenDoor::PressSlab(float DeltaTime)
+{
+	SlabCurrentPitch = FMath::Lerp(SlabCurrentPitch, SlabTargetPitch, DeltaTime * 1.f);
+	FVector SlabLocation = Slab->GetActorLocation();
+	SlabLocation.Z = SlabCurrentPitch;
+	Slab->SetActorLocation(SlabLocation);
+}
+
+void UOpenDoor::UnpressSlab(float DeltaTime)
+{
+	SlabCurrentPitch = FMath::Lerp(SlabCurrentPitch, SlabInitialPitch, DeltaTime * 1.f);
+	FVector SlabLocation = Slab->GetActorLocation();
+	SlabLocation.Z = SlabCurrentPitch;
+	Slab->SetActorLocation(SlabLocation);
+}

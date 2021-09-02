@@ -38,6 +38,13 @@ private:
 	void SetupInputComponent();
 
 	// Return first actor with physics collision hit
-
 	FHitResult GetFirstPhysicsBodyInReach() const;
+
+	// Return player's reach
+	FVector GetLineTraceEnd() const;
+
+	// Return player's position in world
+	FVector GetPlayerViewPointLocation() const;
+
+
 };
