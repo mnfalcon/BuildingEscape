@@ -1,5 +1,6 @@
 # BuildingEscape
 A project used to learn. Basic functionalities include setting some actors' location and rotation, and grabbing a physics component. Made purely in C++.
+The neat thing about this is that it introduces some basic components you can use to make some puzzle games.
 
 ## Grabber.cpp
 This should be a component on the player's pawn.
