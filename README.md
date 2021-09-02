@@ -1,9 +1,9 @@
 # BuildingEscape
 A project used to learn. Basic functionalities include setting some actors' location and rotation, and grabbing a physics component. Made purely in C++.
 
-### Grabber.cpp
+## Grabber.cpp
 This should be a component on the player's pawn.
-#### How to Grab a physics component
+### How to Grab a physics component
 The first thing we need is a line trace, to know which object is being looked at. This is acomplished by the GetFirstPhysicsBodyInReach() function. The Hit variable is an out parameter where we save the FHitResult. 
 The LineTraceSingleByObjectType (read docs https://docs.unrealengine.com/4.27/en-US/API/Runtime/Engine/Engine/UWorld/LineTraceSingleByObjectType/) uses two things we need beforehand:
 - GetLineTraceEnd(): this returns an FVector that starts on the player's camera and it's length is determined by the LineReach variable.
@@ -14,9 +14,9 @@ The next thing is a PhysicsHandle, which we get with the FindPhysicsHandle() fun
 
 Now the physics object is attached to the PhysicsHandle. The PhysicsHandle is a component the player's pawn should have for this to work (otherwise, nothing will happen). To release the component you simply call the UPhysicsHandleComponent::ReleaseComponent() function.
 
-### OpenDoor.cpp
+## OpenDoor.cpp
 This should be a component in the door we want to open.
-#### How to open a door using C++
+### How to open a door using C++
 For this we use a ATriggerVolume (PressurePlate) which should be defined on the level in the editor. You can define any condition you want for the door to open. Maybe you could use a lever which you move also with C++ using similar methods to the ones used here, and setting it to open based on the lever's position. But lets continue.
 The OpenDoor() and CloseDoor() functions are quite similar. What do we use? 
 We need:
