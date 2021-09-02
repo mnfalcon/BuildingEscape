@@ -30,6 +30,9 @@ public:
 
 	float TotalMassOfActors() const;
 
+	void FindAudioComponent();
+	void FindPressurePlate();
+
 	void PressSlab(float DeltaTime);
 	void UnpressSlab(float DeltaTime);
 
@@ -39,6 +42,8 @@ private:
 	float CurrentYaw;
 	float InitialYaw;
 
+	bool bOpenDoorSound = true;
+	bool bCloseDoorSound = false;
 
 	float DoorLastOpened = 0.f;
 	UPROPERTY(EditAnywhere)
@@ -51,22 +56,23 @@ private:
 	float DoorCloseSpeed = 6.f;
 
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+	ATriggerVolume* PressurePlate = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	float MassRequiredToOpen = 70.f;
 
 	UPROPERTY(EditAnywhere)
-	AActor* Slab;
+	AActor* Slab = nullptr;
+
+	UPROPERTY()
+	UAudioComponent* AudioComponent = nullptr;
 
 	UPROPERTY(EditAnywhere)
-	float SlabTargetPitch = -10.f;
-	float SlabCurrentPitch;
-	float SlabInitialPitch;
-
+	float SlabTargetZ = -10.f;
+	float SlabCurrentZ;
+	float SlabInitialZ;
 	UPROPERTY(EditAnywhere)
-	AActor* ActorThatOpens;
+	float SlabPressSpeed = 2.f;
 
-
-
+	bool bPlayedOnce = true;
 };
