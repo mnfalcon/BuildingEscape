@@ -1,5 +1,5 @@
 # BuildingEscape
-A project used to learn. Basic functionalities include setting some actors' location and rotation, and grabbing a physics component. Made purely in C++.
+A project used to learn Unreal Engine 4 (or ue4) and C++. Basic functionalities include setting some actors' location and rotation, and grabbing a physics component. Made purely in C++.
 The neat thing about this is that it introduces some basic components you can use to make some puzzle games.
 
 ## Grabber.cpp
